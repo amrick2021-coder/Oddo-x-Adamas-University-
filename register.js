@@ -1,3 +1,4 @@
+console.log("register.js loaded");
 const registerForm = document.getElementById("registerForm");
 const submitBtn = registerForm.querySelector("button");
 
@@ -52,31 +53,23 @@ registerForm.addEventListener("submit", async (e) => {
 
     try {
 
-        /*
-        const response = await fetch(API_BASE_URL + "/auth/register", {
+        let employees = JSON.parse(localStorage.getItem("users")) || [];
 
-            method: "POST",
+        const exists = employees.some(emp => emp.email === employee.email);
 
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(employee)
-
-        });
-
-        const result = await response.json();
-
-        if(!response.ok){
-            throw new Error(result.message);
+        if (exists) {
+            throw new Error("Email already registered.");
         }
-        */
 
-        console.log(employee);
+        employees.push(employee);
+
+        localStorage.setItem("users", JSON.stringify(employees));
 
         alert("Registration Successful.");
 
         registerForm.reset();
+
+        window.location.href = "login.html";
 
     } catch (error) {
 

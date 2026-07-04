@@ -1,48 +1,43 @@
 const loginForm = document.getElementById("loginForm");
 
-loginForm.addEventListener("submit", async (event) => {
+loginForm.addEventListener("submit", (event) => {
 
     event.preventDefault();
 
     const email = document.getElementById("email").value.trim();
-
     const password = document.getElementById("password").value.trim();
 
-    if(email === "" || password === ""){
-
+    if (email === "" || password === "") {
         alert("Please fill all fields.");
-
         return;
-
     }
 
-    const loginData = {
+    // Get registered users from localStorage
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-        email: email,
+    // Check if the user exists
+    const user = users.find(
+        emp => emp.email === email && emp.password === password
+    );
 
-        password: password
+    if (!user) {
+        alert("Invalid Email or Password!");
+        return;
+    }
 
-    };
+    // Save login information
+    localStorage.setItem("token", "true");
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
 
-    console.log(loginData);
-
-    /*
-    Backend Connection (Spring Boot)
-
-    const response = await fetch(API_BASE_URL + "/auth/login",{
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify(loginData)
-
-    });
-
-    */
-
-    alert("Frontend is ready. Backend will be connected later.");
+    alert("Login Successful!");
+   window.location.href = "employees.html";
+    // Redirect to the page the user wanted to open
+    const redirectPage = localStorage.getItem("redirectAfterLogin");
+if (redirectPage) {
+    localStorage.removeItem("redirectAfterLogin");
+    window.location.href = redirectPage;
+} else {
+    window.location.href = "employees.html";
+}
 
 });
